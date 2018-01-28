@@ -1,4 +1,101 @@
+body {    
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 canvas{
-    background-color: lightgray;
+    position: absolute;
+
+    left: 50%;
+    
+    
+}
+
+#gamerunner{
+    top: 100px;
+margin-left: -180px;
+}
+
+#gametile{
+    top: 307px;
+    margin-left: -153px;
+}
+
+#machine{
+    position: absolute;
+
+    left: 50%;
+    margin-left: -180px;
+    z-index: 10;
+
+    top: 280px;
+    pointer-events: none;
+
+    width: 360px;
+}
+
+#cover{
+    position: absolute;
+    width: 306px;
+    left: 50%;
+    margin-left: -153px;
+    z-index: 20;
+    top: 307px;
+
+}
+
+#ui{
+    width: 360px;
+    height: 100px;
+    position: absolute;
+    background-color: cadetblue;
+    left: 50%;
+    margin-left: -180px;
+}
+
+
+@media (min-width: 768px) {
+
+    canvas{
+        position: absolute;
+    
+        left: 50%;
+        margin-left: -300px;
+        
+    }
+    
+    #gamerunner{
+        top: 100px;
+    border: 2px solid black;
+    }
+    
+    #gametile{
+        top: 375px;
+    
+    }
+    
+    #machine{
+        position: absolute;
+    
+        left: 50%;
+        margin-left: -350px;
+        z-index: 10;
+    
+        top: 325px;
+        pointer-events: none;
+    
+        width: 700px;
+    }
+    
+    #cover{
+        position: absolute;
+    
+        left: 50%;
+        margin-left: -457px;
+        z-index: 20;
+        top: 567px;
+    
+        display: none;
+    }
 
 }
