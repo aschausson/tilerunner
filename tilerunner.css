@@ -12,12 +12,12 @@ canvas{
 }
 
 #gamerunner{
-    top: 100px;
+    top: 80px;
 margin-left: -180px;
 }
 
 #gametile{
-    top: 307px;
+    top: 287px;
     margin-left: -153px;
 }
 
@@ -28,7 +28,7 @@ margin-left: -180px;
     margin-left: -180px;
     z-index: 10;
 
-    top: 280px;
+    top: 260px;
     pointer-events: none;
 
     width: 360px;
@@ -40,17 +40,27 @@ margin-left: -180px;
     left: 50%;
     margin-left: -153px;
     z-index: 20;
-    top: 307px;
+    top: 287px;
 
 }
 
 #ui{
     width: 360px;
-    height: 100px;
+    height: 80px;
     position: absolute;
     background-color: cadetblue;
     left: 50%;
     margin-left: -180px;
+}
+
+
+#botonJugar{
+    float: right;
+}
+
+#ui p{
+    margin: 0;
+    padding: 0;
 }
 
 
