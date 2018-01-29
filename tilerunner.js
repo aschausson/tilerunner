@@ -15,8 +15,12 @@ function changeGameVariables(tileType){
 		variables.bombs += 1
 	else if (tileType == "tileHeart")
 		variables.lives += 1
-	else if (tileType == "tileClock")
+	else if (tileType == "tileClock"){
 		variables.speed -= 0.2
+		if (variables.speed < 0.5)
+			variables.speed = 0.5
+	}
+		
 	else if (tileType == "tileStar")
 		variables.score += 10
 
@@ -37,16 +41,30 @@ changeGameVariables('')
 var originalWidthTile = 900
 var originalHeightTile = 900
 
-var originalWidthRunner = 900
+var originalWidthRunner = 1875
 var originalHeightRunner = 450
 
 var gameTileWidth = 306
 var gameTileHeight = 306
+var gameRunnerWidth = 360
+var gameRunnerHeight = 180
+if ($(window).width() >= 768){
+	gameTileWidth = 348
+	gameTileHeight = 348
+	gameRunnerWidth = 410
+	gameRunnerHeight = 205
+}
+
+
+
 
 var widthRatioTile = gameTileWidth / originalWidthTile
 var heightRatioTile = gameTileHeight / originalHeightTile
 
-var gamerunner = new Phaser.Game(360, 180, Phaser.CANVAS, 'phaser-tilerunner', { preload: preload, create: create, update: update });
+var widthRatioRunner = gameRunnerWidth / originalWidthRunner
+var heightRatioRunner = gameRunnerHeight / originalHeightRunner
+
+var gamerunner = new Phaser.Game(gameRunnerWidth, gameRunnerHeight, Phaser.CANVAS, 'phaser-tilerunner', { preload: preload, create: create, update: update });
 
 var gametile = new Phaser.Game(gameTileWidth, gameTileHeight, Phaser.CANVAS, 'phaser-tilerunner', { preload: preload, create: create, update: update });
 
@@ -87,7 +105,7 @@ function preload() {
 	$('canvas').first().attr('id', 'gamerunner')
 	$('canvas').last().attr('id', 'gametile')
 
-	gamerunner.load.image('runnerfondo', 'assets/runnerfondo.png')
+	gamerunner.load.image('runnerfondo22', 'assets/runnerfondo22.png')
 
 	gametile.load.image('tilefondo', 'assets/tiles/board.png')
 	gametile.load.image('tileSkull', 'assets/tiles/skullchip.png')
@@ -96,7 +114,7 @@ function preload() {
 	gametile.load.image('tileClock', 'assets/tiles/timechip.png')
 	gametile.load.image('tileStar', 'assets/tiles/starchip.png')
 
-
+	gamerunner.load.image('robot', 'assets/runner/robot.png');
 }
 
 
@@ -104,7 +122,8 @@ function preload() {
 
 
 function create() {
-	runnerBackground = gamerunner.add.tileSprite(0, 0, anchoTotal, 400, 'runnerfondo')
+	runnerBackground = gamerunner.add.tileSprite(0, 0, gameRunnerWidth,gameRunnerHeight, 'runnerfondo22')
+//	runnerBackground.scale.setTo(widthRatioRunner, heightRatioRunner)
 
 	tileBackground = gametile.add.tileSprite(0, 0, originalWidthTile, originalHeightTile, 'tilefondo')
 	tileBackground.scale.setTo(widthRatioTile, heightRatioTile)
@@ -164,6 +183,8 @@ function create() {
 	tileLayer = new TilemapLayer(gametile, tileMap, 0, 800, 800)
 	tile = new Tile(tileLayer, 0, 0, 0, 130, 130)
 	*/
+	player = gamerunner.add.sprite(30,157, 'robot');
+    player.anchor.setTo(0.5, 0.5);
 }
 
 
@@ -194,7 +215,7 @@ function addTile(x, y) {
 	tile.scale.setTo(widthRatioTile, heightRatioTile)
 
 	//Animate the tile into the correct vertical position
-	gametile.add.tween(tile).to({ y: y * tileHeight + (tileHeight / 2) }, 500, Phaser.Easing.Linear.In, true)
+	gametile.add.tween(tile).to({ y: y * tileHeight + (tileHeight / 2) }, 100, Phaser.Easing.Linear.In, true)
 
 	//Set the tiles anchor point to the center
 	tile.anchor.setTo(0.5, 0.5)

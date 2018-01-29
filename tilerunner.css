@@ -14,6 +14,7 @@ canvas{
 #gamerunner{
     top: 80px;
 margin-left: -180px;
+border: none;
 }
 
 #gametile{
@@ -75,37 +76,44 @@ margin-left: -180px;
     }
     
     #gamerunner{
-        top: 100px;
+        top: 91px;
     border: 2px solid black;
+    margin-left: -205px;
+    border: none;
     }
     
     #gametile{
-        top: 375px;
-    
+        top: 327px;
+        margin-left: -174px;
     }
     
     #machine{
         position: absolute;
     
         left: 50%;
-        margin-left: -350px;
+        margin-left: -205px;
         z-index: 10;
     
-        top: 325px;
+        top: 296px;
         pointer-events: none;
     
-        width: 700px;
+        width: 410px;
     }
     
     #cover{
         position: absolute;
-    
+        width: 348px;
         left: 50%;
-        margin-left: -457px;
+        margin-left: -174px;
         z-index: 20;
-        top: 567px;
-    
-        display: none;
+        top: 327px;
+
+    }
+
+    #ui{
+        width: 410px;
+        height: 91px;
+        margin-left: -205px;
     }
 
 }
