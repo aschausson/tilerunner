@@ -4,12 +4,16 @@ function GameVariables() {
 	this.score = 0
 	this.bombs = 0
 	this.speed = 0.5
-	this.lives = 3
+	this.life = 100
+
+	this.timerRandom
 }
 
 
 var tileTypes = ['tileSkull', 'tileBomb', 'tileHeart', 'tileClock', 'tileStar']
-
+var obstaclesGround = ['groundpuddle','groundspike','groundwire','groundstake']
+var obstaclesAir = ['airdron','airenergy','aireagle']
+var obstacles = ['groundpuddle','groundspike','groundwire','groundstake','airdron','airenergy','aireagle']
 
 function Tile(posX, posY, estado) {
 	this.posX = posX
@@ -34,6 +38,7 @@ function GameRunner() {
 
 	this.player
 	this.animationRun
+	this.obstacles = []
 
 	this.game = new Phaser.Game(this.width, this.height, Phaser.CANVAS, 'phaser-tilerunner', { preload: preload, create: create, update: update })
 }
@@ -73,12 +78,18 @@ var gameTile = new GameTile()
 
 
 function changeGameVariables(tileType) {
-	if (tileType == "tileSkull")
-		variables.lives -= 1
+	if (tileType == "tileSkull"){
+		variables.life -= 1
+		if (variables.life <= 0)
+			endGame()
+	}
 	else if (tileType == "tileBomb")
 		variables.bombs += 1
-	else if (tileType == "tileHeart")
-		variables.lives += 1
+	else if (tileType == "tileHeart"){
+		if (variables.life >= 100)
+			variables.life = 100
+	}
+		
 	else if (tileType == "tileClock") {
 		variables.speed -= 0.2
 		if (variables.speed < 0.5)
@@ -86,9 +97,9 @@ function changeGameVariables(tileType) {
 	}
 
 	else if (tileType == "tileStar")
-		variables.score += 10
+		variables.score += 100
 
-	$('#lives').html(variables.lives)
+	$('#life').html(variables.life)
 	$('#bombs').html(variables.bombs)
 	$('#score').html(variables.score)
 
@@ -101,7 +112,7 @@ function preload() {
 	$('canvas').first().attr('id', 'gamerunner')
 	$('canvas').last().attr('id', 'gametile')
 
-	gameRunner.game.load.image('runnerfondo22', 'assets/runnerfondo22.png')
+	gameRunner.game.load.image('runnerfondo22', 'assets/runnerfondo222.png')
 
 	gameTile.game.load.image('tilefondo', 'assets/tiles/board.png')
 	gameTile.game.load.image('tileSkull', 'assets/tiles/skullchip.png')
@@ -110,14 +121,23 @@ function preload() {
 	gameTile.game.load.image('tileClock', 'assets/tiles/timechip.png')
 	gameTile.game.load.image('tileStar', 'assets/tiles/starchip.png')
 
-	gameRunner.game.load.spritesheet('robot', 'assets/runner/robot3.png', 60, 64);
-	gameRunner.game.load.spritesheet('robotfly', 'assets/runner/robotfly.png', 56, 91);
-	//gameRunner.game.load.atlasJSONHash('robot', 'assets/runner/robot.png', 'assets/runner/robot.json')
+	gameRunner.game.load.spritesheet('robot', 'assets/runner/robot3.png', 60, 64)
+	gameRunner.game.load.spritesheet('robotfly', 'assets/runner/robotfly.png', 56, 91)
 
+	gameRunner.game.load.image('groundpuddle', 'assets/runner/ground_puddle.png')
+	gameRunner.game.load.image('groundspike', 'assets/runner/ground_wire.png')
+	gameRunner.game.load.image('groundwire', 'assets/runner/ground_wire.png')
+	gameRunner.game.load.image('groundstake', 'assets/runner/ground_stake.png')
+	gameRunner.game.load.image('airdron', 'assets/runner/air_dron.png')
+	gameRunner.game.load.image('airenergy', 'assets/runner/air_energy.png')
+	gameRunner.game.load.image('aireagle', 'assets/runner/air_eagle.png')
 }
 
+var num = 1
 
 function create() {
+	gameRunner.game.physics.startSystem(Phaser.Physics.ARCADE)
+
 	runnerBackground = gameRunner.game.add.tileSprite(0, 0, gameRunner.width, gameRunner.height, 'runnerfondo22')
 	//	runnerBackground.scale.setTo(gameRunner.widthRatio, gameRunner.heightRatio)
 
@@ -149,6 +169,12 @@ function create() {
 	changeGameVariables('')
 	initTiles()
 
+
+	//	gameRunner.obstacles.enableBody = true;
+	//	gameRunner.obstacles.physicsBodyType = Phaser.Physics.ARCADE;
+
+	//	gameRunner.obstacles.collideWorldBounds = true;
+	
 	/*
 	
 	//  https://phaser.io/examples/v2/tilemaps/blank-tilemap
@@ -183,9 +209,40 @@ function create() {
 		//player.scale.setTo(2, 2);
 	//player.scale.x *= -1
 	gameRunner.player = gameRunner.game.add.sprite(80, 145, 'robot')
+	gameRunner.game.physics.enable(gameRunner.player, Phaser.Physics.ARCADE)
+	gameRunner.player.body.collideWorldBounds = false;
+	gameRunner.player.body.immovable = true;
+
 	runBottom()
-	
+
+	//  Here we create our timer events. They will be set to loop at a random value between 250ms and 1000ms
+	variables.timerRandom = gameRunner.game.time.events.loop(gameRunner.game.rnd.integerInRange(3000, 5000), updateCounter);
+	//gameRunner.game.time.events.loop(Phaser.Timer.SECOND*num, updateCounter, this);
+	gameRunner.game.physics.enable([ gameRunner.player, gameRunner.obstacles ], Phaser.Physics.ARCADE);
 }
+
+function updateCounter(){
+	gameRunner.game.time.events.remove(variables.timerRandom);
+	//num++
+	//$('#botonJugar').html(num)
+	var obstacle = null
+	airOrGround = gameRunner.game.rnd.integerInRange(0, 1)
+	if (airOrGround == 0){
+		randomObstacle = gameRunner.game.rnd.integerInRange(0, obstaclesGround.length)
+		obstacle = gameRunner.game.add.sprite(gameRunner.width, 140, obstaclesGround[randomObstacle])
+	}
+	else{
+		randomObstacle = gameRunner.game.rnd.integerInRange(0, obstaclesAir.length)
+		obstacle = gameRunner.game.add.sprite(gameRunner.width, 35, obstaclesAir[randomObstacle])
+	}
+	gameRunner.game.physics.enable(obstacle, Phaser.Physics.ARCADE)
+	obstacle.body.immovable = false;
+
+	//obstacle.gameRunner.game.add.group()
+	gameRunner.obstacles.push(obstacle)
+	gameRunner.player.bringToTop()
+}
+
 
 
 function bottom(){
@@ -197,6 +254,8 @@ function bottom(){
 	gameRunner.animationRun = gameRunner.player.animations.play('run', 6, true)
 
 	gameRunner.game.input.onDown.addOnce(flyMid)
+	gameRunner.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.addOnce(flyMid)
+
 }
 
 
@@ -205,7 +264,7 @@ function runBottom(){
 	var tween = null
 
 	if (gameRunner.player.y < 145)
-		tween = gameRunner.game.add.tween(gameRunner.player).to( { y: '+50' }, 500, Phaser.Easing.Linear.None, true)
+		tween = gameRunner.game.add.tween(gameRunner.player).to( { y: 145 }, 500, Phaser.Easing.Linear.None, true)
 
 	if (tween == null){
 		bottom()
@@ -224,9 +283,10 @@ function flyMid(){
 	gameRunner.player.animations.add('fly', [0,1,2,3])
 	gameRunner.animationFly = gameRunner.player.animations.play('fly', 10, true)
 
-	gameRunner.game.add.tween(gameRunner.player).to( { y: '-50' }, 500, Phaser.Easing.Linear.None, true)
+	gameRunner.game.add.tween(gameRunner.player).to( { y: 95 }, 500, Phaser.Easing.Linear.None, true)
 
 	gameRunner.game.input.onDown.addOnce(runBottom)
+	gameRunner.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.addOnce(runBottom)
 }
 
 
@@ -290,6 +350,10 @@ function tileDown(tile, pointer) {
 }
 
 
+function collision(){
+	
+}
+
 
 
 function update() {
@@ -299,6 +363,15 @@ function update() {
 	$('#speed').html(rounded)
 
 	gameRunner.animationRun.speed = variables.speed * 9
+
+	for (let i = 0; i < gameRunner.obstacles.length; i++) {
+		
+		gameRunner.obstacles[i].x -= variables.speed
+	}
+
+	for (var i = 0; i < gameRunner.obstacles.length; i++) {
+		gameRunner.game.physics.arcade.overlap(gameRunner.player, gameRunner.obstacles[i], enemyHitsPlayer, null, this);
+	}
 
 	//The user is currently dragging from a tile, so let's see if they have dragged
 	//over the top of an adjacent tile
@@ -342,7 +415,85 @@ function update() {
 		}
 
 	}
+	//game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
 }
+
+
+
+function enemyHitsPlayer (player,obs) {
+    
+    obs.kill();
+variables.life -= 10
+
+$('#life').html(variables.life)
+}
+	
+
+/*
+game.physics.startSystem(Phaser.Physics.ARCADE);
+
+game.physics.enable(player, Phaser.Physics.ARCADE);
+    // The enemy's bullets
+    enemyBullets = game.add.group();
+    enemyBullets.enableBody = true;
+    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    enemyBullets.createMultiple(30, 'enemyBullet');
+    enemyBullets.setAll('anchor.x', 0.5);
+    enemyBullets.setAll('anchor.y', 1);
+    enemyBullets.setAll('outOfBoundsKill', true);
+    enemyBullets.setAll('checkWorldBounds', true);
+
+
+function enemyHitsPlayer (player,bullet) {
+    
+    bullet.kill();
+
+    live = lives.getFirstAlive();
+
+    if (live)
+    {
+        live.kill();
+    }
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(player.body.x, player.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    // When the player dies
+    if (lives.countLiving() < 1)
+    {
+        player.kill();
+        enemyBullets.callAll('kill');
+
+        stateText.text=" GAME OVER \n Click to restart";
+        stateText.visible = true;
+
+        //the "click to restart" handler
+        game.input.onTap.addOnce(restart,this);
+    }
+
+}
+
+
+function restart () {
+
+    //  A new level starts
+    
+    //resets the life count
+    lives.callAll('revive');
+    //  And brings the aliens back from the dead :)
+    aliens.removeAll();
+    createAliens();
+
+    //revives the player
+    player.revive();
+    //hides the text
+    stateText.visible = false;
+
+}
+
+*/
 
 
 function swapTiles() {
