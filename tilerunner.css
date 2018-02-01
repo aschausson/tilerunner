@@ -77,6 +77,17 @@ border: none;
     z-index: 20;
 }
 
+.turnDeviceNotification {
+    position:fixed;
+    top: 0;
+    left:0;
+    height:100%;
+    width:100%;
+    display: none;
+    background-image:url('assets/turn.png');
+    background-size:cover;
+  }
+
 
 @media (min-width: 768px) {
 
