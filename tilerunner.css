@@ -86,6 +86,7 @@ border: none;
     display: none;
     background-image:url('assets/turn.png');
     background-size:cover;
+    z-index: 100;
   }
 
 
