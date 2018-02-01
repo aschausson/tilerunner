@@ -3,8 +3,6 @@ $(document).ready(function (){
     $('#botonJugar').click(comienzaJuego)
     $('#botonPausar').click(pausaJuega)
     $('#botonBomba').click(bombardea)
-	if (screen.orientation.lock)
-		screen.orientation.lock("portrait")
 })
 
 
