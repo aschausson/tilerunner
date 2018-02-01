@@ -84,8 +84,6 @@ border: none;
     height:100%;
     width:100%;
     display: none;
-    background-image:url('assets/turn.png');
-    background-size:cover;
     z-index: 100;
   }
 
