@@ -52,6 +52,7 @@ border: none;
     background-color: cadetblue;
     left: 50%;
     margin-left: -180px;
+    background-image: url("assets/uitop.png");
 }
 
 
@@ -62,6 +63,18 @@ border: none;
 #ui p{
     margin: 0;
     padding: 0;
+}
+
+#bloqueo{
+    width: 360px;
+    height: 180px;
+    background-color: #383838;
+    opacity: 0.6;
+    left: 50%;
+    top: 80px;
+    margin-left: -180px;
+    position: absolute;
+    z-index: 20;
 }
 
 
@@ -114,6 +127,16 @@ border: none;
         width: 410px;
         height: 91px;
         margin-left: -205px;
+        background-image: url("assets/uitoplarge.png");
     }
+
+    #bloqueo{
+        width: 410px;
+        height: 205px;
+        top: 91px;
+        margin-left: -205px;
+        z-index: 20;
+    }
+    
 
 }

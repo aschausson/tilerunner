@@ -2,6 +2,7 @@
 
 function GameVariables() {
 	this.score = 0
+	this.bombScore = 0
 	this.bombs = 0
 	this.speed = 0.5
 	this.life = 100
@@ -83,8 +84,11 @@ function changeGameVariables(tileType) {
 		if (variables.life <= 0)
 			endGame()
 	}
-	else if (tileType == "tileBomb")
-		variables.bombs += 1
+	else if (tileType == "tileBomb"){
+		variables.bombScore += 1
+		variables.bombs= Math.floor(variables.bombScore/10)
+	}
+		
 	else if (tileType == "tileHeart"){
 		if (variables.life >= 100)
 			variables.life = 100
@@ -129,6 +133,7 @@ function preload() {
 	gameRunner.game.load.image('groundwire', 'assets/runner/ground_wire.png')
 	gameRunner.game.load.image('groundstake', 'assets/runner/ground_stake.png')
 	gameRunner.game.load.image('airdron', 'assets/runner/air_dron.png')
+	//gameRunner.game.load.image('airdron', 'assets/runner/air_dron_anim.png', 81, 77)
 	gameRunner.game.load.image('airenergy', 'assets/runner/air_energy.png')
 	gameRunner.game.load.image('aireagle', 'assets/runner/air_eagle.png')
 }
@@ -212,6 +217,7 @@ function create() {
 	gameRunner.game.physics.enable(gameRunner.player, Phaser.Physics.ARCADE)
 	gameRunner.player.body.collideWorldBounds = false;
 	gameRunner.player.body.immovable = true;
+	gameRunner.player.body.setSize(30, 54, 13, 6)
 
 	runBottom()
 
@@ -233,11 +239,11 @@ function updateCounter(){
 	}
 	else{
 		randomObstacle = gameRunner.game.rnd.integerInRange(0, obstaclesAir.length)
-		obstacle = gameRunner.game.add.sprite(gameRunner.width, 35, obstaclesAir[randomObstacle])
+		obstacle = gameRunner.game.add.sprite(gameRunner.width, 20, obstaclesAir[randomObstacle])
 	}
 	gameRunner.game.physics.enable(obstacle, Phaser.Physics.ARCADE)
-	obstacle.body.immovable = false;
-
+	obstacle.body.immovable = false
+	obstacle.body.setSize(30, 30, 25, 25)
 	//obstacle.gameRunner.game.add.group()
 	gameRunner.obstacles.push(obstacle)
 	gameRunner.player.bringToTop()
@@ -264,7 +270,7 @@ function runBottom(){
 	var tween = null
 
 	if (gameRunner.player.y < 145)
-		tween = gameRunner.game.add.tween(gameRunner.player).to( { y: 145 }, 500, Phaser.Easing.Linear.None, true)
+		tween = gameRunner.game.add.tween(gameRunner.player).to( { y: 145 }, 200, Phaser.Easing.Linear.None, true)
 
 	if (tween == null){
 		bottom()
@@ -283,7 +289,7 @@ function flyMid(){
 	gameRunner.player.animations.add('fly', [0,1,2,3])
 	gameRunner.animationFly = gameRunner.player.animations.play('fly', 10, true)
 
-	gameRunner.game.add.tween(gameRunner.player).to( { y: 95 }, 500, Phaser.Easing.Linear.None, true)
+	gameRunner.game.add.tween(gameRunner.player).to( { y: 85 }, 200, Phaser.Easing.Linear.None, true)
 
 	gameRunner.game.input.onDown.addOnce(runBottom)
 	gameRunner.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.addOnce(runBottom)
@@ -357,6 +363,13 @@ function collision(){
 
 
 function update() {
+
+	if ($('#botonPausar').hasClass('pausa')){
+		gameRunner.game.paused = true
+		gameTile.game.paused = true
+	}
+
+
 	runnerBackground.tilePosition.x -= variables.speed
 	variables.speed += 0.0002
 	var rounded = Math.round(variables.speed * 10) / 10;
@@ -740,6 +753,31 @@ function fillTile() {
 			}
 
 		}
+	}
+
+}
+
+
+
+function removeSkulls(){
+	if (variables.bombs > 0){
+
+		var group = []
+		for (let i = 0; i < gameTile.tileGrid.length; i++) {
+			for (let j = 0; j < gameTile.tileGrid[0].length; j++) {
+				if (gameTile.tileGrid[i][j].tileType == 'tileSkull')
+					group.push(gameTile.tileGrid[i][j])
+			}
+			
+		}
+		var matches = []
+		matches.push(group)
+		removeTileGroup(matches)
+		fillTile()
+		
+		variables.bombs--
+		variables.bombScore = variables.bombs*10
+		changeGameVariables(' ')
 	}
 
 }
