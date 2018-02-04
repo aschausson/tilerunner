@@ -169,7 +169,7 @@ function preload() {
 	gameRunner.game.load.image('airenergy', 'assets/runner/air_energy.png')
 	gameRunner.game.load.image('aireagle', 'assets/runner/air_eagle.png')
 
-	gameRunner.game.load.audio('music', 'assets/audio/backgroundmusic.mp3')
+	gameRunner.game.load.audio('music', 'assets/audio/tilerunnermusic.wav')
 }
 
 
