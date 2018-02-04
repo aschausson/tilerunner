@@ -1,0 +1,318 @@
+body {    
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing:border-box;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 100%;
+}
+
+h1{
+    text-align: center;
+}
+
+canvas{
+    position: absolute;
+    left: 50%;
+}
+
+#gamerunner{
+    top: 80px;
+    margin-left: -180px;
+    border: none;
+}
+
+#gametile{
+    top: 287px;
+    margin-left: -153px;
+}
+
+#machine{
+    position: absolute;
+    left: 50%;
+    margin-left: -180px;
+    z-index: 10;
+    top: 260px;
+    pointer-events: none;
+    width: 360px;
+}
+
+#cover{
+    position: absolute;
+    width: 306px;
+    left: 50%;
+    margin-left: -153px;
+    z-index: 20;
+    top: 287px;
+}
+
+#ui{
+    width: 360px;
+    height: 80px;
+    position: absolute;
+    background-color: cadetblue;
+    left: 50%;
+    margin-left: -180px;
+    background-image: url("assets/uitop.png");
+}
+
+#gar, #botonOpciones{
+    float: right;
+}
+
+#ui p{
+    margin: 0;
+    padding: 0;
+}
+
+#miniBloqueo{
+    width: 360px;
+    height: 180px;
+    background-color: #383838;
+    opacity: 0.6;
+    left: 50%;
+    top: 80px;
+    margin-left: -180px;
+    position: absolute;
+    z-index: 20;
+}
+
+#bloqueo{
+    width: 360px;
+    height: 620px;
+    background-color: #383838;
+    opacity: 0.6;
+    left: 50%;
+    margin-left: -180px;
+    position: absolute;
+    z-index: 20;
+    display: none;
+}
+
+.turnDeviceNotification {
+    position:fixed;
+    top: 0;
+    left:0;
+    height:100%;
+    width:100%;
+    display: none;
+    z-index: 100;
+}
+
+#botonPausar{
+    float: right;
+}
+
+#botonOpciones{
+    float: right;
+}
+
+#opciones, #login, #cambioNivel, #finJuego{
+    width: 320px;
+    height: 580px;
+    background-color: lightgrey;
+    border: 1px solid grey;
+    z-index: 50;
+    position: absolute;
+    left: 50%;
+    margin-left: -160px;
+    top: 20px;
+    box-shadow: 10px 10px 10px black;
+    display: none;
+}
+
+#avatar{
+    width: 280px;
+    height: 280px;
+    background-color: lightgrey;
+    border: 1px solid grey;
+    z-index: 70;
+    position: absolute;
+    left: 50%;
+    margin-left: -140px;
+    top: 180px;
+    box-shadow: 10px 10px 10px black;
+    display: none;
+}
+
+#avatar img{
+    margin-left: 8px;
+    margin-top: 8px;
+    width: 80px;
+    height: 80px;
+    box-shadow: 5px 5px 5px black;
+    cursor: pointer;
+}
+
+.icono{
+    width: 16px;
+}
+
+#puntuaciones{
+    width: 100px;
+    margin-left: 10px;
+    margin-top: 5px;
+
+}
+
+#puntuaciones span{
+    color: white;
+    text-shadow: 0px 0px 2px yellow;
+}
+
+#botonBomba, #botonOpciones{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: lightgray;
+    border: 1px solid grey;
+    box-shadow: 2px 2px 2px black;
+}
+
+#botonPausar{
+    background-color: lightgray;
+    border: 1px solid grey;
+    width: 18px;
+    height: 18px;
+    box-shadow: 2px 2px 2px black;
+    font-size: 0.7em;
+    text-align: center;
+    padding: 0px;
+}
+
+#botonOpciones, #botonPausar{
+    margin-right: 15px;
+    margin-top: 52px;
+}
+
+#cambioNivel{
+    text-align: center;
+}
+#cambioNivel h2{
+    margin-top: 200px;
+}
+
+#opciones{
+    padding: 5px;
+}
+
+#opciones p{
+    font-size: 0.9em;
+}
+
+#login{
+    box-sizing: border-box;
+    text-align: center;
+    padding: 5px;
+}
+
+.lineaFormulario{
+    width: 270px;
+    text-align: right;
+    margin: 7px;
+}
+
+#divSelFoto{
+    width: 230px;
+}
+
+#avatarUsuario{
+    width: 30px;
+    height: 30px;
+}
+
+#avatarUsuario{
+    position: absolute;
+    margin-left: 260px;
+    margin-top: 10px;
+}
+
+#nombreUsuario{
+    position: absolute;
+    margin-left: 290px;
+    margin-top: 14px;
+}
+
+@media (min-width: 768px) {
+    .icono{
+        width: 20px;
+    }
+    #botonBomba, #botonOpciones{
+        width: 20px;
+        height: 20px;
+    }
+
+    #botonPausar{
+        width: 22px;
+        height: 22px;
+    }
+    
+    
+    canvas{
+        position: absolute;
+        left: 50%;
+        margin-left: -300px;
+    }
+    
+    #gamerunner{
+        top: 91px;
+        border: 2px solid black;
+        margin-left: -205px;
+        border: none;
+    }
+    
+    #gametile{
+        top: 327px;
+        margin-left: -174px;
+    }
+    
+    #machine{
+        position: absolute;
+        left: 50%;
+        margin-left: -205px;
+        z-index: 10;
+        top: 296px;
+        pointer-events: none;
+        width: 410px;
+    }
+    
+    #cover{
+        position: absolute;
+        width: 348px;
+        left: 50%;
+        margin-left: -174px;
+        z-index: 20;
+        top: 327px;
+    }
+
+    #ui{
+        width: 410px;
+        height: 91px;
+        margin-left: -205px;
+        background-image: url("../assets/uitoplarge.png");
+    }
+
+    #miniBloqueo{
+        width: 410px;
+        height: 205px;
+        top: 91px;
+        margin-left: -205px;
+        z-index: 20;
+    }
+    
+    #bloqueo{
+        width: 410px;
+        height: 705px;
+        opacity: 0.6;
+        left: 50%;
+        margin-left: -205px;
+    }
+
+    #avatarUsuario{
+        margin-left: 300px;
+    }
+    
+    #nombreUsuario{
+        margin-left: 332px;
+    }
+    
+}
