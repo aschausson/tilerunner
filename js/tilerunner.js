@@ -219,9 +219,6 @@ function create() {
 	variables.timerRandom = gameRunner.game.time.events.loop(gameRunner.game.rnd.integerInRange(3000, 4000), updateCounter);
 	gameRunner.game.physics.enable([gameRunner.player, gameRunner.obstacles], Phaser.Physics.ARCADE);
 
-	// *true* param enables looping
-	gameRunner.music = new Phaser.Sound(gameRunner.game,'musica',1,true)
-	gameRunner.music.play()
 }
 
 

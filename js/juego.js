@@ -63,6 +63,9 @@ function opciones() {
     if ($('#botonPausar').hasClass('juega')) {
         pausaJuega()
     }
+   // *true* param enables looping
+	gameRunner.music = new Phaser.Sound(gameRunner.game,'musica',1,true)
+	gameRunner.music.play()
 
 }
 
