@@ -52,7 +52,7 @@ canvas{
     background-color: cadetblue;
     left: 50%;
     margin-left: -180px;
-    background-image: url("assets/uitop.png");
+    background-image: url("../assets/uitop.png");
 }
 
 #gar, #botonOpciones{
