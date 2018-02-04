@@ -134,6 +134,26 @@ canvas{
     display: none;
 }
 
+#registroPuntuaciones{
+    width: 280px;
+    height: 280px;
+    background-color: lightgrey;
+    border: 1px solid grey;
+    z-index: 70;
+    position: absolute;
+    left: 50%;
+    margin-left: -140px;
+    top: 180px;
+    box-shadow: 10px 10px 10px black;
+    display: none;
+    overflow-y: scroll;
+    text-align: center;
+}
+
+#cerrarRegistroPuntuaciones{
+    float: right;
+}
+
 #avatar img{
     margin-left: 8px;
     margin-top: 8px;
@@ -230,6 +250,14 @@ canvas{
     position: absolute;
     margin-left: 290px;
     margin-top: 14px;
+}
+
+#finJuego{
+    text-align: center;
+}
+
+#finJuego h4, #finJuego h3{
+    display: block;
 }
 
 @media (min-width: 768px) {

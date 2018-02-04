@@ -23,6 +23,9 @@ function GameVariables() {
 	this.userPhoto
 	this.userName
 	this.userScore
+
+	this.puntuacionMaxPropia = 0
+    this.puntuacionMaxTotal = 0
 }
 
 
@@ -145,7 +148,7 @@ function changeGameVariables(tileType) {
 	$('#speed').html(rounded)
 }
 
-
+/**Se precargan los ficheros que necesita el juego. */
 function preload() {
 	$('canvas').first().attr('id', 'gamerunner')
 	$('canvas').last().attr('id', 'gametile')
@@ -172,7 +175,7 @@ function preload() {
 	gameRunner.game.load.audio('musica', 'assets/audio/tilerunnermusic.mp3')
 }
 
-
+/**Se instancian las variables necesarias para el juego, jugador, casillas.. y se llama a métodos para inicializarlas. */
 function create() {
 	gameRunner.game.physics.startSystem(Phaser.Physics.ARCADE)
 
@@ -215,13 +218,13 @@ function create() {
 	gameRunner.game.input.keyboard.addKey(Phaser.Keyboard.B).onDown.addOnce(removeSkulls)
 	runBottom()
 
-	//  Here we create our timer events. They will be set to loop at a random value between 3 seconds and 4 seconds
 	variables.timerRandom = gameRunner.game.time.events.loop(gameRunner.game.rnd.integerInRange(3000, 4000), updateCounter);
 	gameRunner.game.physics.enable([gameRunner.player, gameRunner.obstacles], Phaser.Physics.ARCADE);
 
 }
 
 
+/**Se crean nuevos obstáculos de forma aleatoria, ya sea volador o de tierra, y el modelo. */
 function updateCounter() {
 	gameRunner.game.time.events.remove(variables.timerRandom);
 
@@ -246,6 +249,7 @@ function updateCounter() {
 }
 
 
+/**Anima al jugador para que corra cuando está en el suelo. */
 function bottom() {
 	gameRunner.player.loadTexture('robot')
 	gameRunner.game.input.onDown.addOnce(flyMid)
@@ -255,11 +259,10 @@ function bottom() {
 
 	gameRunner.player.animations.add('run', [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
 	gameRunner.animationRun = gameRunner.player.animations.play('run', 6, true)
-
-	
 }
 
 
+/**Anima al jugador para que baje del aire al suelo. */
 function runBottom() {
 	var tween = null
 	if (gameRunner.player.y < 145)
@@ -274,6 +277,7 @@ function runBottom() {
 }
 
 
+/**Anima al jugador para que suba del suelo al aire. */
 function flyMid() {
 	gameRunner.player.loadTexture('robotfly')
 	gameRunner.game.input.onDown.addOnce(runBottom)
@@ -284,11 +288,10 @@ function flyMid() {
 	gameRunner.animationFly = gameRunner.player.animations.play('fly', 10, true)
 
 	gameRunner.game.add.tween(gameRunner.player).to({ y: 85 }, 200, Phaser.Easing.Linear.None, true)
-
-	
 }
 
 
+/**Se inicializa todo el tablero con casillas aleatorias. */
 function initTiles() {
 	for (var i = 0; i < gameTile.tileGrid.length; i++) {
 		for (var j = 0; j < gameTile.tileGrid.length; j++) {
@@ -296,42 +299,29 @@ function initTiles() {
 			gameTile.tileGrid[i][j] = tile
 		}
 	}
-	//Once the tiles are ready, check for any matches on the grid
 	gameTile.game.time.events.add(600, function () {
 		checkMatch();
 	})
 }
 
+
+/**Se añade una casilla y si animación en la posición dada. */
 function addTile(x, y) {
 	var tileToAdd = tileTypes[gameTile.randomNum.integerInRange(0, tileTypes.length - 1)]
-
-	//Add the tile at the correct x position, but add it to the top of the game (so we can slide it in)
 	var tile = tiles.create((x * gameTile.tileWidth) + gameTile.tileWidth / 2, 0, tileToAdd)
-
 	tile.scale.setTo(gameTile.widthRatio, gameTile.heightRatio)
-
-	//Animate the tile into the correct vertical position
 	gameTile.game.add.tween(tile).to({ y: y * gameTile.tileHeight + (gameTile.tileHeight / 2) }, 100, Phaser.Easing.Linear.In, true)
-
-	//Set the tiles anchor point to the center
 	tile.anchor.setTo(0.5, 0.5)
-
-	//Enable input on the tile
 	tile.inputEnabled = true
-
-	//Keep track of the type of tile that was added
 	tile.tileType = tileToAdd
-
-	//Trigger the tileDown function whenever the user clicks or taps on this tile
 	tile.events.onInputDown.add(tileDown, this)
 
 	return tile
 }
 
 
-
+/**Cuando se hace click en una casilla, averigua cual es en el tablero. */
 function tileDown(tile, pointer) {
-	//Keep track of where the user originally clicked
 	if (gameTile.canMove) {
 		gameTile.activeTile1 = tile
 
@@ -341,6 +331,7 @@ function tileDown(tile, pointer) {
 }
 
 
+/**Función de actualización de cada juego. Se mueve el fondo, los obstáculos, se comprueba si se ha hecho un movimiento  y se aumenta la velocidad del juego. */
 function update() {
 	if ($('#botonPausar').hasClass('pausa')) {
 		gameRunner.game.paused = true
@@ -362,39 +353,22 @@ function update() {
 		gameRunner.game.physics.arcade.overlap(gameRunner.player, gameRunner.obstacles[i], enemyHitsPlayer, null, this);
 	}
 
-	//The user is currently dragging from a tile, so let's see if they have dragged
-	//over the top of an adjacent tile
 	if (gameTile.activeTile1 && !gameTile.activeTile2) {
-
-		//Get the location of where the pointer is currently
 		var hoverX = gameTile.game.input.x
 		var hoverY = gameTile.game.input.y
 
-		//Figure out what position on the grid that translates to
 		var hoverPosX = Math.floor(hoverX / gameTile.tileWidth)
 		var hoverPosY = Math.floor(hoverY / gameTile.tileHeight)
 
-		//See if the user had dragged over to another position on the grid
 		var difX = (hoverPosX - gameTile.startPosX)
 		var difY = (hoverPosY - gameTile.startPosY)
 
-		//Make sure we are within the bounds of the grid
 		if (!(hoverPosY > gameTile.tileGrid[0].length - 1 || hoverPosY < 0) && !(hoverPosX > gameTile.tileGrid.length - 1 || hoverPosX < 0)) {
-
-			//If the user has dragged an entire tiles width or height in the x or y direction
-			//trigger a tile swap
 			if ((Math.abs(difY) == 1 && difX == 0) || (Math.abs(difX) == 1 && difY == 0)) {
-
-				//Prevent the player from making more moves whilst checking is in progress
 				gameTile.canMove = false
-
-				//Set the second active tile (the one where the user dragged to)
 				gameTile.activeTile2 = gameTile.tileGrid[hoverPosX][hoverPosY]
-
-				//Swap the two active tiles
 				swapTiles()
 
-				//After the swap has occurred, check the grid for any matches
 				gameTile.game.time.events.add(500, function () {
 					checkMatch();
 					gameTile.canMove = true
@@ -405,6 +379,7 @@ function update() {
 }
 
 
+/**Se llama cuando el jugador choca con un obstáculo. */
 function enemyHitsPlayer(player, obs) {
 	obs.kill()
 	variables.life -= 10
@@ -414,20 +389,16 @@ function enemyHitsPlayer(player, obs) {
 }
 
 
-
-
+/**Se crean las animaciones que hacen que dos casillas intercambien la posición. */
 function swapTiles() {
-	//If there are two active tiles, swap their positions
 	if (gameTile.activeTile1 && gameTile.activeTile2) {
 
 		var tile1Pos = { x: (gameTile.activeTile1.x - gameTile.tileWidth / 2) / gameTile.tileWidth, y: (gameTile.activeTile1.y - gameTile.tileHeight / 2) / gameTile.tileHeight }
 		var tile2Pos = { x: (gameTile.activeTile2.x - gameTile.tileWidth / 2) / gameTile.tileWidth, y: (gameTile.activeTile2.y - gameTile.tileHeight / 2) / gameTile.tileHeight }
 
-		//Swap them in our "theoretical" grid
 		gameTile.tileGrid[tile1Pos.x][tile1Pos.y] = gameTile.activeTile2
 		gameTile.tileGrid[tile2Pos.x][tile2Pos.y] = gameTile.activeTile1
 
-		//Actually move them on the screen
 		gameTile.game.add.tween(gameTile.activeTile1).to({ x: tile2Pos.x * gameTile.tileWidth + (gameTile.tileWidth / 2), y: tile2Pos.y * gameTile.tileHeight + (gameTile.tileHeight / 2) }, 100, Phaser.Easing.Linear.In, true)
 		gameTile.game.add.tween(gameTile.activeTile2).to({ x: tile1Pos.x * gameTile.tileWidth + (gameTile.tileWidth / 2), y: tile1Pos.y * gameTile.tileHeight + (gameTile.tileHeight / 2) }, 100, Phaser.Easing.Linear.In, true)
 
@@ -437,36 +408,22 @@ function swapTiles() {
 }
 
 
-
+/**Se llama a la lista de funciones que comprueban emparejamientos, los borran, rellenan el tablero y se vuelve a comprobar. */
 function checkMatch() {
-	//Call the getMatches function to check for spots where there is
-	//a run of three or more tiles in a row
 	var matches = getMatches(gameTile.tileGrid)
 
-	//If there are matches, remove them
 	if (matches.length > 0) {
-
-		//Remove the tiles
 		removeTileGroup(matches)
-
-		//Move the tiles currently on the board into their new positions
 		resetTile()
-
-		//Fill the board with new tiles wherever there is an empty spot
 		fillTile()
-
-		//Trigger the tileUp event to reset the active tiles
 		gameTile.game.time.events.add(500, function () {
 			tileUp()
 		});
-
-		//Check again to see if the repositioning of tiles caused any new matches
 		gameTile.game.time.events.add(600, function () {
 			checkMatch()
 		})
 	}
 	else {
-		//No match so just swap the tiles back to their original position and reset
 		swapTiles()
 		gameTile.game.time.events.add(600, function () {
 			tileUp()
@@ -476,18 +433,18 @@ function checkMatch() {
 }
 
 
+/**Se cancelan las casillas que fueron activadas. */
 function tileUp() {
-	//Reset the active tiles
 	gameTile.activeTile1 = null
 	gameTile.activeTile2 = null
 }
 
 
+/**Se comprueban los emparejamientos horizontales y verticales en el tablero. Se agrupan para después ser eliminadas. */
 function getMatches(tileGrid) {
 	var matches = []
 	var groups = []
-
-	//Check for horizontal matches
+	//horizontales
 	for (var i = 0; i < gameTile.tileGrid.length; i++) {
 		var tempArr = gameTile.tileGrid[i]
 		groups = []
@@ -517,8 +474,7 @@ function getMatches(tileGrid) {
 		if (groups.length > 0)
 			matches.push(groups)
 	}
-
-	//Check for vertical matches
+	//verticales
 	for (j = 0; j < gameTile.tileGrid.length; j++) {
 		var tempArr = gameTile.tileGrid[j]
 		groups = []
@@ -551,25 +507,15 @@ function getMatches(tileGrid) {
 }
 
 
-
+/**Se borra un grupo de casillas coincidentes del tablero. */
 function removeTileGroup(matches) {
-	//Loop through all the matches and remove the associated tiles
 	for (var i = 0; i < matches.length; i++) {
 		var tempArr = matches[i]
-
 		for (var j = 0; j < tempArr.length; j++) {
-
 			var tile = tempArr[j]
-			//Find where this tile lives in the theoretical grid
 			var tilePos = getTilePos(gameTile.tileGrid, tile)
-
-			//Remove the tile from the screen
 			tiles.remove(tile)
-
-			//Change variables depending of the type of tile removed and show them
 			changeGameVariables(tile.tileType)
-
-			//Remove the tile from the theoretical grid
 			if (tilePos.x != -1 && tilePos.y != -1) {
 				gameTile.tileGrid[tilePos.x][tilePos.y] = null
 			}
@@ -578,12 +524,11 @@ function removeTileGroup(matches) {
 }
 
 
+/**Se devuelve la posición X e Y de una casilla del tablero. */
 function getTilePos(tileGrid, tile) {
 	var pos = { x: -1, y: -1 }
-	//Find the position of a specific tile in the grid
 	for (var i = 0; i < gameTile.tileGrid.length; i++) {
 		for (var j = 0; j < gameTile.tileGrid[i].length; j++) {
-			//There is a match at this position so return the grid coords
 			if (tile == gameTile.tileGrid[i][j]) {
 				pos.x = i
 				pos.y = j
@@ -595,25 +540,18 @@ function getTilePos(tileGrid, tile) {
 }
 
 
+/**Se deshace el movimiento hecho, si no creaba ningún emparejamiento. */
 function resetTile() {
-	//Loop through each column starting from the left
 	for (var i = 0; i < gameTile.tileGrid.length; i++) {
-
-		//Loop through each tile in column from bottom to top
 		for (var j = gameTile.tileGrid[i].length - 1; j > 0; j--) {
-
-			//If this space is blank, but the one above it is not, move the one above down
 			if (gameTile.tileGrid[i][j] == null && gameTile.tileGrid[i][j - 1] != null) {
-				//Move the tile above down one
+
 				var tempTile = gameTile.tileGrid[i][j - 1]
 				gameTile.tileGrid[i][j] = tempTile
 				gameTile.tileGrid[i][j - 1] = null
 
 				gameTile.game.add.tween(tempTile).to({ y: (gameTile.tileHeight * j) + (gameTile.tileHeight / 2) }, 200, Phaser.Easing.Linear.In, true)
 
-				//The positions have changed so start this process again from the bottom
-				//NOTE: This is not set to me.gameTile.tileGrid[i].length - 1 because it will immediately be decremented as
-				//we are at the end of the loop.
 				j = gameTile.tileGrid[i].length
 			}
 		}
@@ -621,25 +559,21 @@ function resetTile() {
 }
 
 
+/**Se rellenan las casillas vacias del tablero */
 function fillTile() {
-	//Check for blank spaces in the grid and add new tiles at that position
 	for (var i = 0; i < gameTile.tileGrid.length; i++) {
-
 		for (var j = 0; j < gameTile.tileGrid.length; j++) {
-
 			if (gameTile.tileGrid[i][j] == null) {
-				//Found a blank spot so lets add animate a tile there
 				var tile = addTile(i, j);
 
-				//And also update our "theoretical" grid
 				gameTile.tileGrid[i][j] = tile;
 			}
-
 		}
 	}
 }
 
 
+/**Se borran las casillas de calavera. */
 function removeSkulls() {
 	if (variables.bombs > 0) {
 		gameTile.canMove = false

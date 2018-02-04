@@ -108,7 +108,12 @@
         <img src="assets/avatars/8.JPEG" alt="">
     </div>
 
+    <div id="registroPuntuaciones">
+        <span id="cerrarRegistroPuntuaciones">X</span>
+    </div>
+
     <div id="opciones">
+            <a id="verPuntuaciones" href="">Ver máximas puntuaciones</a>
         <h3>Dificultad</h3>
         <p>Afecta a la velocidad del juego, el daño de los chips calavera, y los puntos para pasar de nivel. Por otro lado consigues
             más puntos!</p>
@@ -125,9 +130,7 @@
             Para ello combina chips de tipo estrella y avanza de nivel cumpliendo los con los puntos necesarios.</p>
         <p>Los chips fundidos de Rob-Otto hacen que cada vez corra más rápido, baja el ritmo combinando chips con relojes.</p>
         <p>Los chips con calavera están fundidos y provocaran daño. Los chips con corazones harán reparaciones y recuperarán
-            vida.
-        </p>
-        <p>Los chips de bomba, nos darán explosivos que se pueden usar cuando quieras, y se librarán de los chips calavera del
+            vida. Los chips de bomba, nos darán explosivos que se pueden usar cuando quieras, y se librarán de los chips calavera del
             tablero.
         </p>
         <hr>
@@ -143,9 +146,15 @@
 
     <div id="finJuego">
         <h2>Fin del juego</h2>
-        <h3>Puntuación:</h3>
-        <h4>Record personal:</h4>
-        <h4>Record total:</h4>
+        <h3>Puntuación: </h3>
+        <h3 id="puntuacionFinal"></h3>
+        <br>
+        <h4>Record personal: </h4>
+        <h4 id="recordPersonal"></h4>
+        <br>
+        <h4>Record total: </h4>
+        <h4 id="recordTotal"></h4>
+        <br>
         <button id="reiniciar">REINICIAR</button>
     </div>
 
