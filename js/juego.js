@@ -3,7 +3,6 @@ $(document).ready(function () {
     $('#botonJugar').click(salirOpciones)
     $('#botonPausar').click(pausaJuega)
     $('#botonBomba').click(bombardea)
-    //$('#botonLogin').click(login)
     $('#botonOpciones').click(opciones)
     $('#nivel').click(comienzaJuego)
     $('#reiniciar').click(reininiciarJuego)
@@ -132,22 +131,34 @@ jQuery(window).bind('orientationchange', function (e) {
     switch (window.orientation) {
         case 0:
             $('.turnDeviceNotification').css('display', 'none')
+            if ($('#botonPausar').hasClass('pausa')) {
+                pausaJuega()
+            }
             // The device is in portrait mode now
             break
 
         case 180:
             $('.turnDeviceNotification').css('display', 'none')
+            if ($('#botonPausar').hasClass('pausa')) {
+                pausaJuega()
+            }
             // The device is in portrait mode now
             break
 
         case 90:
             // The device is in landscape now
             $('.turnDeviceNotification').css('display', 'block')
+            if ($('#botonPausar').hasClass('juega')) {
+                pausaJuega()
+            }
             break
 
         case -90:
             // The device is in landscape now
             $('.turnDeviceNotification').css('display', 'block')
+            if ($('#botonPausar').hasClass('juega')) {
+                pausaJuega()
+            }
             break
     }
 })

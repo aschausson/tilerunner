@@ -169,10 +169,7 @@ function preload() {
 	gameRunner.game.load.image('airenergy', 'assets/runner/air_energy.png')
 	gameRunner.game.load.image('aireagle', 'assets/runner/air_eagle.png')
 
-	gameRunner.game.load.audio('music', ['assets/audio/backgroundmusic.mp3'])
-	// *true* param enables looping
-	gameRunner.music = new Phaser.Sound(gameRunner.game,'music',1,true)
-
+	gameRunner.game.load.audio('music', 'assets/audio/backgroundmusic.mp3')
 }
 
 
@@ -222,6 +219,8 @@ function create() {
 	variables.timerRandom = gameRunner.game.time.events.loop(gameRunner.game.rnd.integerInRange(3000, 4000), updateCounter);
 	gameRunner.game.physics.enable([gameRunner.player, gameRunner.obstacles], Phaser.Physics.ARCADE);
 
+	// *true* param enables looping
+	gameRunner.music = new Phaser.Sound(gameRunner.game,'music',1,true)
 	gameRunner.music.play()
 }
 
